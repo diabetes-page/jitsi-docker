@@ -15,12 +15,32 @@ http_default_host = "{{ .Env.XMPP_DOMAIN }}"
 {{ $JWT_TOKEN_AUTH_MODULE := .Env.JWT_TOKEN_AUTH_MODULE | default "token_verification" }}
 {{ $ENABLE_LOBBY := .Env.ENABLE_LOBBY | default "0" | toBool }}
 
+{{ $ENABLE_XMPP_WEBSOCKET := .Env.ENABLE_XMPP_WEBSOCKET | default "1" | toBool }}
+{{ $PUBLIC_URL := .Env.PUBLIC_URL | default "https://localhost:8443" -}}
+
 {{ if and $ENABLE_AUTH (eq $AUTH_TYPE "jwt") .Env.JWT_ACCEPTED_ISSUERS }}
 asap_accepted_issuers = { "{{ join "\",\"" (splitList "," .Env.JWT_ACCEPTED_ISSUERS) }}" }
 {{ end }}
 
 {{ if and $ENABLE_AUTH (eq $AUTH_TYPE "jwt") .Env.JWT_ACCEPTED_AUDIENCES }}
 asap_accepted_audiences = { "{{ join "\",\"" (splitList "," .Env.JWT_ACCEPTED_AUDIENCES) }}" }
+{{ end }}
+
+consider_bosh_secure = true;
+
+-- Deprecated in 0.12
+-- https://github.com/bjc/prosody/commit/26542811eafd9c708a130272d7b7de77b92712de
+{{ $XMPP_CROSS_DOMAINS := $PUBLIC_URL }}
+{{ $XMPP_CROSS_DOMAIN := .Env.XMPP_CROSS_DOMAIN | default "" }}
+{{ if eq $XMPP_CROSS_DOMAIN "true"}}
+cross_domain_websocket = true
+cross_domain_bosh = true
+{{ else }}
+{{ if not (eq $XMPP_CROSS_DOMAIN "false") }}
+  {{ $XMPP_CROSS_DOMAINS = list $PUBLIC_URL (print "https://" .Env.XMPP_DOMAIN) .Env.XMPP_CROSS_DOMAIN | join "," }}
+{{ end }}
+cross_domain_websocket = { "{{ join "\",\"" (splitList "," $XMPP_CROSS_DOMAINS) }}" }
+cross_domain_bosh = { "{{ join "\",\"" (splitList "," $XMPP_CROSS_DOMAINS) }}" }
 {{ end }}
 
 VirtualHost "{{ .Env.XMPP_DOMAIN }}"
@@ -42,7 +62,15 @@ VirtualHost "{{ .Env.XMPP_DOMAIN }}"
     authentication = "internal_hashed"
   {{ end }}
 {{ else }}
+    -- https://github.com/jitsi/docker-jitsi-meet/pull/502#issuecomment-619146339
+    {{ if $ENABLE_XMPP_WEBSOCKET }}
+    authentication = "token"
+    {{ else }}
     authentication = "anonymous"
+    {{ end }}
+    app_id = ""
+    app_secret = ""
+    allow_empty_token = true
 {{ end }}
     ssl = {
         key = "/config/certs/{{ .Env.XMPP_DOMAIN }}.key";
@@ -50,11 +78,15 @@ VirtualHost "{{ .Env.XMPP_DOMAIN }}"
     }
     modules_enabled = {
         "bosh";
+        {{ if $ENABLE_XMPP_WEBSOCKET }}
+        "websocket";
+        "smacks"; -- XEP-0198: Stream Management
+        {{ end }}
         "pubsub";
         "ping";
         "speakerstats";
         "conference_duration";
-        {{ if and $ENABLE_LOBBY (not $ENABLE_GUEST_DOMAIN) }}
+        {{ if $ENABLE_LOBBY }}
         "muc_lobby_rooms";
         {{ end }}
         {{ if .Env.XMPP_MODULES }}
@@ -65,7 +97,7 @@ VirtualHost "{{ .Env.XMPP_DOMAIN }}"
         {{end}}
     }
 
-    {{ if and $ENABLE_LOBBY (not $ENABLE_GUEST_DOMAIN) }}
+    {{ if $ENABLE_LOBBY }}
     main_muc = "{{ .Env.XMPP_MUC_DOMAIN }}"
     lobby_muc = "lobby.{{ .Env.XMPP_DOMAIN }}"
     {{ if .Env.XMPP_RECORDER_DOMAIN }}
@@ -80,21 +112,17 @@ VirtualHost "{{ .Env.XMPP_DOMAIN }}"
 
 {{ if $ENABLE_GUEST_DOMAIN }}
 VirtualHost "{{ .Env.XMPP_GUEST_DOMAIN }}"
+    -- https://github.com/jitsi/docker-jitsi-meet/pull/502#issuecomment-619146339
+    {{ if $ENABLE_XMPP_WEBSOCKET }}
+    authentication = "token"
+    {{ else }}
     authentication = "anonymous"
+    {{ end }}
+    app_id = ""
+    app_secret = ""
+    allow_empty_token = true
+
     c2s_require_encryption = false
-
-    {{ if $ENABLE_LOBBY }}
-    modules_enabled = {
-        "muc_lobby_rooms";
-    }
-
-    main_muc = "{{ .Env.XMPP_MUC_DOMAIN }}"
-    lobby_muc = "lobby.{{ .Env.XMPP_DOMAIN }}"
-    {{ if .Env.XMPP_RECORDER_DOMAIN }}
-    muc_lobby_whitelist = { "{{ .Env.XMPP_RECORDER_DOMAIN }}" }
-    {{ end }}
-    {{ end }}
-
 {{ end }}
 
 VirtualHost "{{ .Env.XMPP_AUTH_DOMAIN }}"

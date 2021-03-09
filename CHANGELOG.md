@@ -1,3 +1,104 @@
+## stable-5390-3
+
+Based on stable release 5390-3.
+
+* a698da5 misc: add jicofo reservation env variables to compose
+* 86c3022 web: brandingDataUrl -> dynamicBrandingUrl
+* 88e950d jicofo: fix healthcheck
+* 493cbdd misc: fix typo
+* e12d7f2 web : Add DESKTOP_SHARING_FRAMERATE_MIN and MAX env vars
+* fa98a31 examples: fix k8s example
+* 88d1034 doc: add port to PUBLIC_URL
+* c876b40 doc: update CHANGELOG
+* 5cf14b0 misc: working on latest
+
+## stable-5390-2
+
+Based on stable release 5390-2.
+
+* 3e04fb4 prosody: fix lobby when authentication is enabled
+* 24781e3 misc: working on latest
+
+## stable-5390-1
+
+Based on stable release 5390-1.
+
+* 3ac5397 misc: working on latest
+
+## stable-5390
+
+Based on stable release 5390.
+
+* 0f541c8 jicofo: migrate to new config
+* 12823cb prosody: fix jibri recording websocket error
+* 7594ea2 jigasi: add ability to control SIP default room for incoming calls
+* b0e653a jigasi: fix when using authentication
+* 4564170 misc: working on latest
+
+## stable-5142-4
+
+Based on stable release 5142-4.
+
+* 6f7b2b4 prosody: add internal domain name to default cross-domains list
+* ada7b95 jvb: fix check for JVB_TCP_HARVESTER_DISABLED
+* a7fb101 jibri: don't provide a non-existing finalizer path
+* d013053 jibri: add missing dependency for `kill` command
+* 0b25141 web: Add ENABLE_HSTS flag to disable strict-transport-security header
+* f856037 web: add more config options
+* eedac14 web: add ability to disable IPv6
+* af6f3ac doc: update CHANGELOG
+* e3bb5c1 misc: working on latest
+
+## stable-5142-3
+
+**Important:** This release should fix some update problems users found in -1 and -2 versions. The main problem observed is the introduction of XMPP WebSockets, which requires extra configuration for the /xmpp-wesocket route if a reverse proxy is used in front of this setup. Pure docker-compose installations don't need any changes.
+
+Based on stable release 5142-3.
+
+* c2c6460 prosody: fix cross-domain WS default value
+* 8261f72 jicofo,jigase: add ability to extend the config file
+* 6a4887d web: use env variables to set worker processes and connections
+* 5679578 prosody: add env var to config cross domain settings
+* effb30b prosody: always rebuild configs on start
+* 905d431 jicofo,jigasi: always rebuild configs on start
+* c52b64a misc: working on latest
+
+## stable-5142-2
+
+Based on stable release 5142-2.
+
+* 700c04a web: properly handle acme.sh return codes
+* 4cb181c web: install acme certs to persistent storage
+* 1d2c68a web: fix running acme.sh on the right home directory
+* 5c44a84 misc: stop using apt-key, it's deprecated
+* 5f06c3a doc: update CHANGELOG
+* 0f780b4 misc: working on latest
+
+## stable-5142-1
+
+**Important:** This release includes 2 major changes: migrating the base image to Debian Buster and replacing certbot with acme.sh for getting Letś Encrypt certificates. Please report any problems you find!
+
+Based on stable release 5142-1.
+
+* b0cb4a1 web: update TLS config to Mozilla security guidelines
+* 0601212 web: replace certbot with acme.sh
+* 43f678d build: refactor Makefile
+* b00f92a web: use Python 3 only for certbot
+* 880b9b0 core: update base image to Debian Buster
+* ba01190 web: prevent s6 from restarting cron if it shouldn't be run
+* 42a4346 etherpad: use official image and making skin full width
+* c36c4d0 web: always rebuild nginx configs on start
+* aea4411 Adds private server.
+* 6b69576 web: add ability to configure tokenAuthUrl
+* ff6d9bc Fix websocket
+* e5746ae misc: add ENABLE_PREJOIN_PAGE to .env
+* 465816b web,prosody: turn on XMPP WebSocket by default
+* d747bfb web,prosody: add XMPP WebSocket / Stream Management support
+* 130eb55 jvb: migrate to new config file
+* 5290499 doc: updated link for running behind NAT
+* 7cb470c misc: support/encourage usage of ShellCheck
+* 04a210f misc: working on latest
+
 ## stable-5142
 
 Based on stable release 5142.
