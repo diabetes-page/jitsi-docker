@@ -1,6 +1,6 @@
 FORCE_REBUILD ?= 0
 JITSI_RELEASE ?= stable
-JITSI_BUILD ?= stable-5142
+JITSI_BUILD ?= stable-5390-3
 JITSI_REPO ?= jitsi
 JITSI_SERVICES ?= base base-java web prosody jicofo jvb jigasi jibri
 
