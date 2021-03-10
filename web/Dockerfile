@@ -1,8 +1,28 @@
 ARG JITSI_REPO=jitsi
+
+FROM debian:buster as jitsi-meet-web-builder
+
+COPY jitsi-meet/ /opt/jitsi-meet
+RUN \
+    apt-get update && \
+    apt-get install -y build-essential git curl dh-make && \
+    curl -fsSL https://deb.nodesource.com/setup_15.x | bash - && \
+    apt-get install -y nodejs
+
+WORKDIR /opt/jitsi-meet/
+
+RUN npm install
+RUN echo $(pwd)
+RUN echo $(ls -la ../)
+RUN make
+RUN dpkg-buildpackage -d -A -rfakeroot -us -uc -tc 
+
+
 FROM ${JITSI_REPO}/base
 
 ADD https://raw.githubusercontent.com/acmesh-official/acme.sh/2.8.8/acme.sh /opt
 COPY rootfs/ /
+COPY --from=jitsi-meet-web-builder /opt/jitsi-meet-* /jitsi-meet/
 
 RUN \
     apt-dpkg-wrap apt-get update && \
