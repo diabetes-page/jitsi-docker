@@ -23,11 +23,7 @@ Then, configure the .env correctly. Importantly, double-check authentication rel
 
 Note that the `CONFIG` variable in `.env` points to a folder on your machine to persist certain things. THe folder will be created if it does not exist. Sometimes it is helpful to delete the folder to reset certain things.
 
-### Step 3: Setting up the `web` part
-
-Follow the instructions from our `jitsi-meet` repo README. Copy the files you get to the directory `web/rootfs/jitsi-meet ` in this repository.
-
-### Step 4: Building the videostreaming service
+### Step 3: Building the videostreaming service
 
 ```bash
 sudo make build JITSI_SERVICE=web
