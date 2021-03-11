@@ -7,7 +7,7 @@ This the videostreaming service of diabetes.page. It is a modified version of [`
 ### Step 1: Clone this repository with its submodules
 
 ```bash
-git clone https://bitbucket.org/thesoftwarebrothers/jitsi-docker.git --recursive
+git clone git@bitbucket.org:thesoftwarebrothers/jitsi-docker.git --recursive
 ```
 
 ### Step 2: Setting up the environment
