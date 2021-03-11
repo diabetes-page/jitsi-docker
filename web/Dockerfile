@@ -12,8 +12,6 @@ RUN \
 WORKDIR /opt/jitsi-meet/
 
 RUN npm install
-RUN echo $(pwd)
-RUN echo $(ls -la ../)
 RUN make
 RUN dpkg-buildpackage -d -A -rfakeroot -us -uc -tc 
 
