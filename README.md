@@ -4,7 +4,13 @@ This the videostreaming service of diabetes.page. It is a modified version of [`
 
 ## Installation
 
-### Step 1: Setting up the environment
+### Step 1: Clone this repository with its submodules
+
+```bash
+git clone git@bitbucket.org:thesoftwarebrothers/jitsi-docker.git --recursive
+```
+
+### Step 2: Setting up the environment
 
 The configuration works using `.env` files. To get started, run
 
@@ -16,10 +22,6 @@ cp env.example .env
 Then, configure the .env correctly. Importantly, double-check authentication related settings such as `ENABLE_AUTH` and so on. Also set `CORS_URL` to the url of the frontend, for example `PUBLIC_URL=http://localhost:19006/`. This is to ensure that CORS headers are set correctly. The relevant code for CORS can be found in `/web/rootfs/default/meet.conf`.
 
 Note that the `CONFIG` variable in `.env` points to a folder on your machine to persist certain things. THe folder will be created if it does not exist. Sometimes it is helpful to delete the folder to reset certain things.
-
-### Step 2: Setting up the `web` part
-
-Follow the instructions from our `jitsi-meet` repo README. Copy the files you get to the directory `web/rootfs/jitsi-meet ` in this repository.
 
 ### Step 3: Building the videostreaming service
 
