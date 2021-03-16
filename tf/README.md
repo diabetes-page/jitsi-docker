@@ -20,12 +20,21 @@ This module contains the Infrastructure defined in Terraform for the Jitsi Kuber
 
 Make sure to authenticate with the `gcloud` SDK.
 ```sh
-gcloud auth login
+gcloud auth application-default login
 ```
 
-Check that you have selected the correct project
+Check that you have selected the correct project (`diabetes-page-development` or `diabetes-page-production`):
 ```sh
 gcloud config get-value project
+```
+
+If not, use this command to set the correct project:
+```sh
+gcloud config set project diabetes-page-development
+```
+or
+```sh
+gcloud config set project diabetes-page-production
 ```
 
 ### Terraform usage
